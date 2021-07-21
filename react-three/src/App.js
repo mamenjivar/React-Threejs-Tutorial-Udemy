@@ -1,25 +1,34 @@
-import logo from './logo.svg';
+import { Route, Switch, Redirect } from 'react-router';
 import './App.css';
 
-function App() {
+import Navbar from './components/Navbar';
+import ReactThreeFiber from './components/ReactThreeFiber';
+import ThreeDemo from './components/ThreeDemo';
+
+
+const App = () => {
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Navbar />
+
+      {/* might add home to this project */}
+      <Switch>
+        <Route exact path="/three">
+          <ThreeDemo />
+        </Route>
+        <Route exact path="/">
+          <Redirect to="/three" />
+        </Route>
+        <Route exact path="/react-three-fiber">
+          <ReactThreeFiber />
+        </Route>
+        <Route exact path="*">
+          <Redirect to="/three" />
+        </Route>
+      </Switch>
     </div>
   );
-}
+};
 
 export default App;
