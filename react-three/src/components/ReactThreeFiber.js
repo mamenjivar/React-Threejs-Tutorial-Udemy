@@ -1,82 +1,34 @@
-import React, { useMemo, useRef } from "react";
-import { Canvas, useFrame, extend, useThree, useLoader } from "react-three-fiber";
-import { BufferAttribute, ShadowMapType } from "three";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-// import "./Navbar.css";
-extend({ OrbitControls });
-
-const Orbit = () => {
-  const { camera, gl } = useThree();
-  return <orbitControls args={[camera, gl.domElement]} />;
-};
-
-const Box = (props) => {
-  const ref = useRef();
-  // const texture = useLoader();
-  useFrame((state) => {
-    ref.current.rotation.x += 0.01;
-    ref.current.rotation.y += 0.01;
-    console.log(state);
-  });
-
-  const handlePointerDown = e => {
-    console.log(e);
-  }
-
-  return (
-    <mesh ref={ref} {...props} castShadow onPointerDown={handlePointerDown}
-    // receiveShadow
-    >
-      <boxBufferGeometry />
-      <meshPhysicalMaterial
-        color="blue"
-        // opacity={0.7}
-        // transparent
-        // // wireframe
-        metalness={1}
-        // roughness={0}
-        // clearcoat={1}
-        // transmission={0.5}
-        // reflectivity={1}
-        // // side={THREE.DoubleSide}
-      />
-    </mesh>
-  );
-};
-
-const Floor = (props) => {
-  return (
-    <mesh {...props} receiveShadow>
-      <boxBufferGeometry args={[20, 1, 10]} />
-      <meshPhysicalMaterial />
-    </mesh>
-  );
-};
-
-const Bulb = (props) => {
-  return (
-    <mesh {...props}>
-      <pointLight castShadow />
-      <sphereBufferGeometry args={[0.2, 20, 20]} />
-      <meshPhongMaterial emissive="yellow" />
-    </mesh>
-  );
-};
+import React, { Suspense } from "react";
+import { Canvas } from "react-three-fiber";
+import Orbit from "./Orbit";
+import Box from "./Box";
+import Floor from "./Floor";
+import Bulb from "./Bulb";
+import ColorPicker from "./ColorPicker";
+import Draggable from "./Draggable";
 
 const ReactThreeFiber = () => {
   return (
     <div style={{ height: "100vh", width: "100vw" }}>
+      <ColorPicker />
       <Canvas
         style={{ background: "black" }}
-        camera={{ position: [3, 3, 3] }}
+        camera={{ position: [7, 7, 7] }}
         shadows
       >
-        <fog attach="fog" args={["white", 1, 2]} />
+        {/* <fog attach="fog" args={["white", 1, 2]} /> */}
         <ambientLight intensity={0.2} />
         <Bulb position={[0, 3, 0]} />
-        <Orbit />
+        {/* <Orbit/> */}
         <axesHelper args={[5]} />
-        <Box position={[0, 1, 0]} />
+        <Draggable>
+          <Suspense fallback={null}>
+            <Box position={[-4, 1, 0]} />
+          </Suspense>
+          <Suspense fallback={null}>
+            <Box position={[4, 1, 0]} />
+          </Suspense>
+        </Draggable>
         <Floor position={[0, -0.5, 0]} />
       </Canvas>
     </div>
